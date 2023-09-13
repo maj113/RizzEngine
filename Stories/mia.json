@@ -1,0 +1,25 @@
+{
+    "mia": {
+        "stats": {
+            "jacked": 50,
+            "attraction": 50,
+            "looks": 3
+        },
+        "storizz": {
+            "story1": {
+                "story": "mias story placeholder",
+                "askout1": "askouttext1",
+                "askout2": "askouttext1",
+                "askout3": "askouttext1",
+                "rejection1": "rejectiontext"
+            },
+            "story2": {
+                "story": "mias story placeholder",
+                "askout1": "askouttext1",
+                "askout2": "askouttext1",
+                "askout3": "askouttext1",
+                "rejection1": "rejectiontext"
+            }
+        }
+    }
+}
