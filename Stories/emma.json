@@ -1,0 +1,25 @@
+{
+    "emma": {
+        "stats": {
+            "jacked": 30,
+            "attraction": 40,
+            "looks": 2
+        },
+        "storizz": {
+            "story1": {
+                "story": "mias story placeholder",
+                "askout1": "askouttext1",
+                "askout2": "askouttext1",
+                "askout3": "askouttext1",
+                "rejection1": "rejectiontext"
+            },
+            "story2": {
+                "story": "mias story placeholder",
+                "askout1": "askouttext1",
+                "askout2": "askouttext1",
+                "askout3": "askouttext1",
+                "rejection1": "rejectiontext"
+            }
+        }
+    }
+}
