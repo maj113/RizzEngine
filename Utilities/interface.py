@@ -2,6 +2,9 @@ import importlib.util
 import os
 from time import sleep
 from random import uniform
+from .storymanager import compare_stats
+from Player.Playerstats import display_player_stats
+
 
 def load_activities_module(module_name):
     module_spec = importlib.util.spec_from_file_location(module_name, f"./Activities/{module_name}.py")
@@ -41,49 +44,62 @@ def slow_print(text: str, speed: int = 5, sleepfor: int = 0, newlineend: bool = 
     if clear:
         clsscr()
 
+
+def check_activities():
+    activities_path = "./Activities"
+    activity_files = [f for f in os.listdir(activities_path) if f.endswith(".py")]
+    
+    if not activity_files:
+        print("No activity files found in the 'Activities' folder.")
+    else:
+        clsscr()
+        slow_print("Available Activities:\n", speed = 10)
+        for idx, file_name in enumerate(activity_files, start=1):
+            description = get_first_docs_or_exec(file_name[:-3])  # Remove '.py' extension
+            if description:
+                slow_print(f"   {description} [{idx}]")
+                
+        slow_print("\nSelect an activity (enter the number): ",newlineend=False)
+        choice = input()
+        try:
+            choice = int(choice)
+            if 1 <= choice <= len(activity_files):
+                selected_module_name = activity_files[choice - 1][:-3]  # Remove '.py' extension
+                get_first_docs_or_exec(selected_module_name, True)
+            else:
+                print("Invalid choice. Please enter a valid number.")
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+
+def display_stats():
+    clsscr()
+    display_player_stats()
+    slow_print(f"\nYou can pick: {compare_stats()}", sleepfor=4)
+
+
 def available_options(selector: str = "main"):
+    clsscr()
     if selector == "main":
         slow_print("Start new story [1]\n"
                     "Continue Story [2]\n"
                     "Do some activities [3]\n"
                     "Check stats and characters [4]\n"
                     "Save and Quit [5]\n", speed=25)
-        return
     
     if selector == "activities":
-        activities_path = "./Activities"
-        activity_files = [f for f in os.listdir(activities_path) if f.endswith(".py")]
-        
-        if not activity_files:
-            print("No activity files found in the 'Activities' folder.")
-        else:
-            clsscr()
-            slow_print("Available Activities:", speed = 10)
-            for idx, file_name in enumerate(activity_files, start=1):
-                description = get_first_docs_or_exec(file_name[:-3])  # Remove '.py' extension
-                if description:
-                    slow_print(f"   {description} [{idx}]")
-                    
-            choice = input("Select an activity (enter the number): ")
-            try:
-                choice = int(choice)
-                if 1 <= choice <= len(activity_files):
-                    selected_module_name = activity_files[choice - 1][:-3]  # Remove '.py' extension
-                    get_first_docs_or_exec(selected_module_name, True)
-                else:
-                    print("Invalid choice. Please enter a valid number.")
-            except ValueError:
-                print("Invalid input. Please enter a number.")
+        check_activities()
+
 
 
 def mainmenu(choice: int = 0):
     while True:
-        clsscr()
         available_options()
         choice = int(input("what are you picking? "))
         if choice == 1:
-            available_options()
+            continue
         if choice == 2:
-            available_options()
+            continue
         if choice == 3:
             available_options(selector="activities")
+        if choice == 4:
+            display_stats()

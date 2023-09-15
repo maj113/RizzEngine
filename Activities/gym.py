@@ -5,13 +5,14 @@ import json
 
 def go_to_gym():
     """Go to the jim brother"""
+    slow_print("You decide to go workout. How long do you wanna work out for? ", newlineend=False)
     try:
-        workoutTime = int(input("You decide to go workout. How long do you wanna work out for? "))
+        workoutTime = int(input())
     except ValueError:
         slow_print("Input a number next time, jackass!")
         return
 
-    for i in range(workoutTime):
+    for time in range(workoutTime):
         
         slow_print("💪🏻", sleepfor=1, newlineend=False) 
     
