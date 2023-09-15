@@ -1,5 +1,4 @@
 from Utilities.storymanager import compare_stats
-from Utilities.interface import slow_print
+from Utilities.interface import slow_print, mainmenu
 
-slow_print(f"You can pick {compare_stats()}")
-
+mainmenu()
