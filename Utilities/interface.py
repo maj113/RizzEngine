@@ -9,13 +9,16 @@ def load_activities_module(module_name):
     module_spec.loader.exec_module(activities_module)
     return activities_module
 
-def get_first_function_description(module_name):
+def get_first_docs_or_exec(module_name, execute: bool = False):
     activities_module = load_activities_module(module_name)
     
     for name, func in vars(activities_module).items():
         if callable(func):
             docstring = func.__doc__
             if docstring:
+                if execute:
+                    clsscr()
+                    return func()
                 first_line = docstring.strip().split('\n')[0]
                 return first_line
 
@@ -38,17 +41,6 @@ def slow_print(text: str, speed: int = 5, sleepfor: int = 0, newlineend: bool = 
     if clear:
         clsscr()
 
-def get_and_execute_first_function(module_name):
-    activities_module = load_activities_module(module_name)
-    
-    for name, func in vars(activities_module).items():
-        if callable(func):
-            docstring = func.__doc__
-            if docstring:
-                clsscr()
-                func()  # Execute the function
-                return
-
 def available_options(selector: str = "main"):
     if selector == "main":
         slow_print("Start new story [1]\n"
@@ -68,7 +60,7 @@ def available_options(selector: str = "main"):
             clsscr()
             slow_print("Available Activities:", speed = 10)
             for idx, file_name in enumerate(activity_files, start=1):
-                description = get_first_function_description(file_name[:-3])  # Remove '.py' extension
+                description = get_first_docs_or_exec(file_name[:-3])  # Remove '.py' extension
                 if description:
                     slow_print(f"   {description} [{idx}]")
                     
@@ -77,7 +69,7 @@ def available_options(selector: str = "main"):
                 choice = int(choice)
                 if 1 <= choice <= len(activity_files):
                     selected_module_name = activity_files[choice - 1][:-3]  # Remove '.py' extension
-                    get_and_execute_first_function(selected_module_name)
+                    get_first_docs_or_exec(selected_module_name, True)
                 else:
                     print("Invalid choice. Please enter a valid number.")
             except ValueError:
@@ -94,5 +86,4 @@ def mainmenu(choice: int = 0):
         if choice == 2:
             available_options()
         if choice == 3:
-            import Activities
             available_options(selector="activities")
