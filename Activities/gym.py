@@ -1,28 +1,42 @@
-from Utilities.interface import slow_print
-from Player.Playerstats import save_player_stats_to_json
-import json
+from Utilities.interface import slow_print, display_stats, clsscr
+from Utilities.loader import  load_json
+from Player.Playerstats import update_player_stats
+
 
 
 def go_to_gym():
-    """Go to the jim brother"""
-    slow_print("You decide to go workout. How long do you wanna work out for? ", newlineend=False)
-    try:
-        workoutTime = int(input())
-    except ValueError:
-        slow_print("Input a number next time, jackass!")
-        return
-
-    for time in range(workoutTime):
-        
-        slow_print("💪🏻", sleepfor=1, newlineend=False) 
+    """Go to the gym"""
     
-    with open("player_stats.json", 'r') as json_file:
-        player_stats = json.load(json_file)
-    # Update the "jacked" stat
-    player_stats["jacked"] += workoutTime
-    player_stats["looks"] += workoutTime
+    # Load player stats
+    player_stats = load_json("player_stats.json")
 
-    #Save the updated player stats back to the JSON file
-    save_player_stats_to_json(player_stats, "player_stats.json")
+    # Get the desired workout time from the player
+    while True:
+        try:
+            slow_print("You decide to go workout. How long do you wanna work out for? ", newlineend=False)
+            workoutTime = int(input())
+            clsscr()
 
-    slow_print(f"\nYou feel better about yourself and you look a lot better.", sleepfor=3)
+            if workoutTime <= player_stats["money"]:
+                break
+            else:
+                slow_print("Brotha you broke asf, lazy ass mf go work", sleepfor=2)
+                return
+
+        except ValueError:
+            clsscr()
+            slow_print("Input a number next time, jackass!", sleepfor=2, clear=True)
+
+
+    # Display a workout animation
+    for _ in range(workoutTime):
+        slow_print("💪", sleepfor=1, newlineend=False)
+    clsscr()
+
+    # Update player stats
+    update_player_stats(player_stats, workoutTime, jacked='plus', looks='plus', money='minus')
+
+    # Show post-workout message and updated stats
+    slow_print("You feel better about yourself and you look a lot better.", sleepfor=2, newlineend=False)
+    display_stats()
+

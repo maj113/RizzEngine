@@ -1,6 +1,6 @@
-from .loader import load_json, process_directory
 import os
 
+from .loader import load_json, process_directory
 
 # Specify the path to the player's stats JSON file
 player_stats_file = "player_stats.json"

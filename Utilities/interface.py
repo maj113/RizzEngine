@@ -2,28 +2,44 @@ import importlib.util
 import os
 from time import sleep
 from random import uniform
+from types import ModuleType
+
 from .storymanager import compare_stats
 from Player.Playerstats import display_player_stats
 
 
-def load_activities_module(module_name):
+def load_activities_module(module_name) -> ModuleType:
     module_spec = importlib.util.spec_from_file_location(module_name, f"./Activities/{module_name}.py")
     activities_module = importlib.util.module_from_spec(module_spec)
     module_spec.loader.exec_module(activities_module)
     return activities_module
 
 def get_first_docs_or_exec(module_name, execute: bool = False):
+    # Load the activities module from the file
     activities_module = load_activities_module(module_name)
     
+    callable_functions = []
+    docstrings = []
+
+    # Find callable functions and collect their docstrings
     for name, func in vars(activities_module).items():
         if callable(func):
+            callable_functions.append(func)
             docstring = func.__doc__
             if docstring:
-                if execute:
-                    clsscr()
-                    return func()
-                first_line = docstring.strip().split('\n')[0]
-                return first_line
+                docstrings.append(docstring.strip())
+
+    if execute:
+        clsscr()
+        if callable_functions:
+            # Execute the last callable function
+            return callable_functions[-1]()
+
+    # Return the docstring of the last callable function (or None if none found)
+    if docstrings:
+        return docstrings[-1]
+
+    return None
 
 def clsscr():
     """
@@ -53,16 +69,16 @@ def check_activities():
         print("No activity files found in the 'Activities' folder.")
     else:
         clsscr()
-        slow_print("Available Activities:\n", speed = 10)
+        slow_print("Available Activities:\n", speed = 20)
         for idx, file_name in enumerate(activity_files, start=1):
             description = get_first_docs_or_exec(file_name[:-3])  # Remove '.py' extension
             if description:
                 slow_print(f"   {description} [{idx}]")
-                
-        slow_print("\nSelect an activity (enter the number): ",newlineend=False)
-        choice = input()
+
+        slow_print("\nSelect an activity (enter the number): ", newlineend=False)
+        
         try:
-            choice = int(choice)
+            choice = int(input())
             if 1 <= choice <= len(activity_files):
                 selected_module_name = activity_files[choice - 1][:-3]  # Remove '.py' extension
                 get_first_docs_or_exec(selected_module_name, True)
@@ -74,18 +90,20 @@ def check_activities():
 def display_stats():
     clsscr()
     display_player_stats()
-    slow_print(f"\nYou can pick: {compare_stats()}", sleepfor=4)
+    slow_print(f"\nYou can pick: {compare_stats()}", sleepfor=2, speed=10)
 
 
 def available_options(selector: str = "main"):
     clsscr()
     if selector == "main":
-        slow_print("Start new story [1]\n"
-                    "Continue Story [2]\n"
-                    "Do some activities [3]\n"
-                    "Check stats and characters [4]\n"
-                    "Save and Quit [5]\n", speed=25)
-    
+        menu_options = [
+            "Start new story [1]",
+            "Continue Story [2]",
+            "Do some activities [3]",
+            "Check stats and characters [4]",
+            "Save and Quit [5]\n"
+        ]
+        slow_print("\n".join(menu_options), speed=20)
     if selector == "activities":
         check_activities()
 
@@ -94,7 +112,8 @@ def available_options(selector: str = "main"):
 def mainmenu(choice: int = 0):
     while True:
         available_options()
-        choice = int(input("what are you picking? "))
+        slow_print("what are you picking? ", newlineend=False)
+        choice = int(input())
         if choice == 1:
             continue
         if choice == 2:
@@ -103,3 +122,10 @@ def mainmenu(choice: int = 0):
             available_options(selector="activities")
         if choice == 4:
             display_stats()
+        if choice == 5:
+            clsscr()
+            slow_print("Cya next time :)")
+            break
+        #else:
+        #    clsscr()
+        #    slow_print("Invalid option!", sleepfor=2)
