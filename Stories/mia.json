@@ -5,20 +5,30 @@
             "attraction": 50,
             "looks": 3
         },
+        "intro": "My name is Mia, I'm 19. I have long, dense, auburn hair and pale white skin. I'm very tall for a girl. I'm about 190cm tall, and when I was in primary, I was on the girl's basketball team. I used to be the best in my school's team and was even better than most guys. In 9th grade I had to stop playing because of a stress fracture in my leg, and if you look closely, you'll notice the way I move my left leg is a little odd. I like wearing lots of eyeliner and I'm proud of my vibrant gray eyes. I always get told that I'm a very confident girl. I tell people exactly what I want. I'm not scared of saying no.",
         "storizz": {
+            "story0": { 
+                "story": "You're on your first day of school and feeling anxious as you make your way down the hallway towards classroom 359. Your eyes are fixed on the floor when suddenly you collide with someone, causing your books to fly up into the air. Looking up, you see the most beautiful woman you've ever laid eyes on. She apologizes and chuckles, saying \"Oh, sorry! I should watch where I'm going!\" You're left speechless as she picks up your books and hands them to you before rushing off to her own classroom. You can't help but wonder who she was."
+            },
             "story1": {
-                "story": "mias story placeholder",
-                "askout1": "askouttext1",
-                "askout2": "askouttext1",
-                "askout3": "askouttext1",
-                "rejection1": "rejectiontext"
+                "story": "After that interaction with the pretty girl in the hall, you're in class and can't take your mind off her. Unfortunately for you, the professor notices this and warns you, that if you don't start paying attention he will punish you. You try concentrating but simply can't. She's all you can think about. The professor doesn't take kindly to your behavior and makes you leave the class. You step out of the classroom, and there she is, the perfect girl. what do you do now?",
+                "askout1": "*you walk up to her* umm... hey! You're pretty! *you grin like a dumbass*",
+                "askout2": "*You keep staring*",
+                "askout3": "*you walk up to her all confident* Hey, sugartits! How's it going? Can I glaze your donut?",
+
+                "reaction1": "Oh, really? *she seems surprised* Wow! Thanks! You're pretty cute if I'm being honest",
+                "reaction2": "*she notices you and seems a bit uncomfortable so she quickly leaves*",
+                "reaction3": "Uhhh... what the actual fuck? *she seems extremely uncomfortable*"
             },
             "story2": {
-                "story": "mias story placeholder",
-                "askout1": "askouttext1",
-                "askout2": "askouttext1",
-                "askout3": "askouttext1",
-                "rejection1": "rejectiontext"
+                "story": "*You sit beside her in silence for a bit and then decide to speak*",
+                "askout1": "C- Can I get your Snap, please?",
+                "askout2": "Gimme your Snap, girl!",
+                "askout3": "H- Huge mommy milkiessss!!!",
+
+                "reaction1": "Awww! You asked so nicely! Of course you can! *she gives you her Snap*",
+                "reaction2": "Uhhh- well alright *she gives you her Snap*",
+                "reaction3": "What's wrong with you?! Go away!"
             }
         }
     }

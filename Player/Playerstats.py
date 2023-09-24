@@ -1,6 +1,6 @@
 import random
 import os
-from typing import Dict
+from typing import Any, Dict
 
 from Utilities.loader import load_json, save_json
 
@@ -19,7 +19,7 @@ if not os.path.exists(json_file_path):
     player_stats = generate_player_stats()
     save_json(json_file_path, player_stats)
 
-def display_player_stats():
+def display_player_stats() -> None:
     player_stats = load_json(json_file_path)
 
     if player_stats:
@@ -30,9 +30,23 @@ def display_player_stats():
     else:
         print("No player stats found.")
 
+def get_player_name() -> str:
+    stats = load_json(json_file_path)
+    name = str(stats.get("name"))
+    if not name:
+        create_player_name(stats)
+    return name
 
+def create_player_name(stats: dict) -> str:
+    from Utilities.interface import slow_print
+    slow_print("What's your name? ", newlineend=False)
+    new_name = str(input()).capitalize()
+    update_player_stats(stats, new_name, name='change')
+    return new_name
 
-def update_player_stats(player_stats: Dict[str, int], stats_change: int, **stat_updates: str) -> None:
+def update_player_stats(
+        player_stats: Dict[str, int], stats_change: Any, **stat_updates: str
+    ) -> None:
     """
     Update player stats and save them to a JSON file.
 
@@ -52,6 +66,8 @@ def update_player_stats(player_stats: Dict[str, int], stats_change: int, **stat_
             player_stats[stat_name] += stats_change
         elif update_operator == 'minus':
             player_stats[stat_name] -= stats_change
+        elif update_operator == 'change':
+            player_stats[stat_name] = stats_change
         # Add more cases for other update operators as needed
 
     # Save the updated player stats back to the JSON file

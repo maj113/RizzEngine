@@ -1,5 +1,5 @@
 import os
-
+from typing import Dict
 from .loader import load_json, process_directory
 
 # Specify the path to the player's stats JSON file
@@ -9,12 +9,17 @@ player_stats_file = "player_stats.json"
 stories_directory = os.path.join(os.path.dirname(__file__), '..', 'Stories')
 
 # Load player stats using the load_json function from loader.py
-player_stats = load_json(player_stats_file)
-
+def check_stats() -> dict:
+    player_stats = load_json(player_stats_file)
+    return player_stats
 
 # Use the process_directory function from loader.py to load character stats
-characters_stats = process_directory(stories_directory)
-def compare_stats(player_stats=player_stats, characters_stats=characters_stats) -> str:
+def check_stories() -> Dict[str, dict]:
+    characters_stats = process_directory(stories_directory)
+    return characters_stats
+
+# Use the process_directory function from loader.py to load character stats
+def compare_stats(player_stats=None, characters_stats=None) -> str:
     """
     Compare player's stats with character stats and return available characters as a formatted string.
 
@@ -25,6 +30,11 @@ def compare_stats(player_stats=player_stats, characters_stats=characters_stats) 
     Returns:
         str: A formatted string containing character names that meet or exceed player's stats.
     """
+    if player_stats is None:
+        player_stats = check_stats()
+    if characters_stats is None:
+        characters_stats = check_stories()
+
     # Initialize an empty list to store available characters
     available_characters = []  
 
@@ -43,15 +53,9 @@ def compare_stats(player_stats=player_stats, characters_stats=characters_stats) 
             available_characters.append(character_name)  
 
     # Convert the list of character names into a formatted string
+    if not available_characters:
+        return "No one, get better rizz bro."
     formatted_characters = ', '.join(available_characters)
 
     return formatted_characters  # Return the formatted string
 
-
-
-
-
-"""
-    # Compare player stats with character stats and get available characters
-    available_characters = compare_stats(player_stats, characters_stats)
-"""

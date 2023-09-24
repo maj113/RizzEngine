@@ -4,12 +4,17 @@ from time import sleep
 from random import uniform
 from types import ModuleType
 
-from .storymanager import compare_stats
-from Player.Playerstats import display_player_stats
+
+from .storymanager import compare_stats, check_stories
+from Player.Playerstats import display_player_stats, get_player_name
+from .loader import load_json
+
 
 
 def load_activities_module(module_name) -> ModuleType:
-    module_spec = importlib.util.spec_from_file_location(module_name, f"./Activities/{module_name}.py")
+    module_spec = importlib.util.spec_from_file_location(
+        module_name, f"./Activities/{module_name}.py"
+    )
     activities_module = importlib.util.module_from_spec(module_spec)
     module_spec.loader.exec_module(activities_module)
     return activities_module
@@ -24,9 +29,9 @@ def get_first_docs_or_exec(module_name, execute: bool = False):
     # Find callable functions and collect their docstrings
     for name, func in vars(activities_module).items():
         if callable(func):
-            callable_functions.append(func)
             docstring = func.__doc__
             if docstring:
+                callable_functions.append(func)
                 docstrings.append(docstring.strip())
 
     if execute:
@@ -41,13 +46,17 @@ def get_first_docs_or_exec(module_name, execute: bool = False):
 
     return None
 
-def clsscr():
+def clsscr() -> None:
     """
-    Clears the console screen using an escape sequence.
+    Clears the console screen using the appropriate command based on the OS.
     """
-    print("\033c", end="", flush=True)
+    os.system('cls' if os.name == 'nt' else 'clear')
 
-def slow_print(text: str, speed: int = 5, sleepfor: int = 0, newlineend: bool = True, clear: bool = False):
+def slow_print(
+        text: str, speed: int = 5,
+        sleepfor: int = 0, newlineend: bool = True,
+        clear: bool = False
+    ) -> None:
     for char in text:
         print(char, end="", flush=True)
         sleep(uniform(0.1, 0.25) * (1 / speed))
@@ -60,11 +69,82 @@ def slow_print(text: str, speed: int = 5, sleepfor: int = 0, newlineend: bool = 
     if clear:
         clsscr()
 
+#TODO: MOVE TO Storymanager.py
+def start_story(character_name) -> None:
+    character_story_data = load_json(f"./Stories/{character_name}.json")
 
-def check_activities():
+    if character_name not in character_story_data:
+        clsscr()
+        slow_print(f"Character '{character_name}' not found in the Stories.")
+        return
+
+    character_info = character_story_data[character_name]
+
+    if "intro" not in character_info:
+        # Handle case where the character doesn't have an intro or has a broken story
+        clsscr()
+        slow_print(f"{character_name.capitalize()} doesn't have a valid story. Please pick another character.", sleepfor=2)
+        return
+
+    intro_text = character_info["intro"]
+    clsscr()
+    slow_print(intro_text)
+
+    slow_print(f"Do you want to pick {character_name}? (yes/no): ", newlineend=False)
+    choice = input().strip().lower()
+
+    if choice != "yes":
+        # Ask if they want to pick a different character
+        clsscr()
+        slow_print("Do you want to pick a different character? (yes/no): ", newlineend=False)
+        choice = input().strip().lower()
+
+        if choice == "yes":
+            return  # Return to character selection
+    clsscr()
+    character_story = character_info.get("storizz", {})
+    current_story_index = 0
+
+    while f"story{current_story_index}" in character_story:
+        story_segment = character_story[f"story{current_story_index}"]["story"]
+        slow_print(f"{story_segment}\n", speed=8, sleepfor=2, clear=True)
+        
+        askout_count = 0
+
+        for idx in range(1, 4):
+            if f"askout{idx}" in character_story[f"story{current_story_index}"]:
+                askout_count += 1
+                slow_print(f"  {character_story[f'story{current_story_index}'][f'askout{idx}']} - [{idx}]")
+        
+        if askout_count > 0:  # Check if there are askouts
+            slow_print("\nWhich response are you picking? ", newlineend=False)
+        
+            choice = input().strip()
+            clsscr()
+            if choice == "menu":
+                break  # Return to the main menu
+            if choice.isdigit() and 1 <= int(choice) <= askout_count:
+                choice_key = f"askout{choice}"
+                reaction_key = f"reaction{choice}"
+                if choice_key in character_story[f"story{current_story_index}"]:
+                    slow_print(f'{character_name.capitalize()}: {character_story[f"story{current_story_index}"][reaction_key]}')
+                else:
+                    slow_print(f"No reaction text available for this choice.")
+            else:
+                slow_print("Invalid choice. Please enter a valid option.")
+        
+        current_story_index += 1
+
+    else:
+        # End of the story
+        slow_print("End of the story.", sleepfor=2)
+
+
+def check_activities() -> None:
     activities_path = "./Activities"
-    activity_files = [f for f in os.listdir(activities_path) if f.endswith(".py")]
-    
+    activity_files = [
+        f for f in os.listdir(activities_path) if f.endswith(".py") and f != "__init__.py"
+    ]
     if not activity_files:
         print("No activity files found in the 'Activities' folder.")
     else:
@@ -83,15 +163,57 @@ def check_activities():
                 selected_module_name = activity_files[choice - 1][:-3]  # Remove '.py' extension
                 get_first_docs_or_exec(selected_module_name, True)
             else:
-                print("Invalid choice. Please enter a valid number.")
+                slow_print("Invalid choice. Please enter a valid number.", sleepfor=2)
         except ValueError:
-            print("Invalid input. Please enter a number.")
+            slow_print("Invalid input. Please enter a number.", sleepfor=2)
 
-def display_stats():
+def display_stats() -> None:
     clsscr()
     display_player_stats()
     slow_print(f"\nYou can pick: {compare_stats()}", sleepfor=2, speed=10)
 
+
+def character_selector() -> None:
+    while True:
+        clsscr()
+        characters_stats = check_stories()
+        formatted_characters = compare_stats()
+        available_characters = []
+
+        slow_print("Available Characters:\n")
+
+        for idx, character_name in enumerate(characters_stats.keys(), start=1):
+            formatted_name = f" {character_name.capitalize()} - [{idx}]"
+            message = formatted_name
+
+            if character_name not in formatted_characters:
+                message += " - Cannot select"
+            else:
+                available_characters.append(character_name)
+
+            slow_print(message)
+
+        if not available_characters:
+            slow_print("You can't select any character, do some activities and increase your stats", sleepfor=2)
+            return
+
+        slow_print("\nSelect a character (enter the number) or 'menu' to go back: ", newlineend=False)
+        choice = input().strip()
+        
+        if choice == "menu":
+            break
+        elif choice.isdigit() and 1 <= int(choice) <= len(characters_stats):
+            selected_character_index = int(choice) - 1
+            selected_character_name = list(characters_stats.keys())[selected_character_index]
+
+            if selected_character_name in available_characters:
+                start_story(selected_character_name)
+            else:
+                clsscr()
+                slow_print("You can't select this character since your stats are too low", sleepfor=2)
+        else:
+            clsscr()
+            slow_print("Invalid choice. Please enter a valid option.", sleepfor=2)
 
 def available_options(selector: str = "main"):
     clsscr()
@@ -106,26 +228,33 @@ def available_options(selector: str = "main"):
         slow_print("\n".join(menu_options), speed=20)
     if selector == "activities":
         check_activities()
+    if selector == "character_selection":
+        character_selector()
 
 
 
-def mainmenu(choice: int = 0):
+
+def mainmenu() -> None:
+    valid_choices = [1, 2, 3, 4, 5]
+
     while True:
         available_options()
-        slow_print("what are you picking? ", newlineend=False)
+        slow_print("What are you picking? ", newlineend=False)
         choice = int(input())
-        if choice == 1:
-            continue
-        if choice == 2:
-            continue
-        if choice == 3:
-            available_options(selector="activities")
-        if choice == 4:
-            display_stats()
-        if choice == 5:
+
+        if choice in valid_choices:
+            if choice == 1:
+                available_options("character_selection")
+            if choice == 2:
+                continue
+            if choice == 3:
+                available_options(selector="activities")
+            if choice == 4:
+                display_stats()
+            if choice == 5:
+                clsscr()
+                slow_print("Cya next time :)")
+                break
+        else:
             clsscr()
-            slow_print("Cya next time :)")
-            break
-        #else:
-        #    clsscr()
-        #    slow_print("Invalid option!", sleepfor=2)
+            slow_print("Invalid option!", sleepfor=2)
