@@ -3,11 +3,11 @@ import os
 from time import sleep
 from random import uniform
 from types import ModuleType
-
+from typing import Any
 
 from .storymanager import compare_stats, check_stories
-from Player.Playerstats import display_player_stats, get_player_name
-from .loader import load_json
+from Player.Playerstats import display_player_stats
+from .loader import load_json, save_json
 
 
 
@@ -19,7 +19,7 @@ def load_activities_module(module_name) -> ModuleType:
     module_spec.loader.exec_module(activities_module)
     return activities_module
 
-def get_first_docs_or_exec(module_name, execute: bool = False):
+def get_first_docs_or_exec(module_name, execute: bool = False) -> Any | None:
     # Load the activities module from the file
     activities_module = load_activities_module(module_name)
     
@@ -70,6 +70,13 @@ def slow_print(
         clsscr()
 
 #TODO: MOVE TO Storymanager.py
+
+def save_game(character_name, character_info, current_story_index) -> None:
+    character_info["saved_at"] = f"story{current_story_index}"
+    character_story_data = load_json(f"./Stories/{character_name}.json")
+    character_story_data[character_name] = character_info
+    save_json(f"./Stories/{character_name}.json", character_story_data)
+
 def start_story(character_name) -> None:
     character_story_data = load_json(f"./Stories/{character_name}.json")
 
@@ -108,7 +115,7 @@ def start_story(character_name) -> None:
     while f"story{current_story_index}" in character_story:
         story_segment = character_story[f"story{current_story_index}"]["story"]
         slow_print(f"{story_segment}\n", speed=8, sleepfor=2, clear=True)
-        
+
         askout_count = 0
 
         for idx in range(1, 4):
@@ -133,12 +140,14 @@ def start_story(character_name) -> None:
             else:
                 slow_print("Invalid choice. Please enter a valid option.")
         
+        # Save the game progress
+        save_game(character_name ,character_info, current_story_index)
+
         current_story_index += 1
 
     else:
         # End of the story
         slow_print("End of the story.", sleepfor=2)
-
 
 def check_activities() -> None:
     activities_path = "./Activities"
@@ -172,6 +181,10 @@ def display_stats() -> None:
     display_player_stats()
     slow_print(f"\nYou can pick: {compare_stats()}", sleepfor=2, speed=10)
 
+def check_saves(character_name) -> Any:
+    character_story_data = load_json(f"./Stories/{character_name}.json")
+    saved_at = character_story_data.get(character_name, {}).get("saved_at")
+    return saved_at
 
 def character_selector() -> None:
     while True:
@@ -191,6 +204,10 @@ def character_selector() -> None:
             else:
                 available_characters.append(character_name)
 
+            # Check for save state
+            if check_saves(character_name):
+                message += " - In progress"
+
             slow_print(message)
 
         if not available_characters:
@@ -199,7 +216,7 @@ def character_selector() -> None:
 
         slow_print("\nSelect a character (enter the number) or 'menu' to go back: ", newlineend=False)
         choice = input().strip()
-        
+
         if choice == "menu":
             break
         elif choice.isdigit() and 1 <= int(choice) <= len(characters_stats):
@@ -207,7 +224,16 @@ def character_selector() -> None:
             selected_character_name = list(characters_stats.keys())[selected_character_index]
 
             if selected_character_name in available_characters:
-                start_story(selected_character_name)
+                # Check for save state
+                if check_saves(character_name):
+                    clsscr()
+                    slow_print(f"You are about to overwrite the save state for {selected_character_name.capitalize()}. Continue? (yes/no): ", newlineend=False)
+                    overwrite_choice = input().strip().lower()
+
+                    if overwrite_choice == "yes":
+                        start_story(selected_character_name)
+                else:
+                    start_story(selected_character_name)
             else:
                 clsscr()
                 slow_print("You can't select this character since your stats are too low", sleepfor=2)
@@ -215,7 +241,7 @@ def character_selector() -> None:
             clsscr()
             slow_print("Invalid choice. Please enter a valid option.", sleepfor=2)
 
-def available_options(selector: str = "main"):
+def available_options(selector: str = "main") -> None:
     clsscr()
     if selector == "main":
         menu_options = [
