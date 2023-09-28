@@ -10,7 +10,7 @@ def load_clothes_json() -> Dict[str, int]:
     return clothes_in_shop
 
 def clothes_Shop() -> None:
-    """Go Shopping for clothes"""
+    """Go shopping for clothes"""
 
     #loads json files
     player_stats = load_json("player_stats.json")
