@@ -11,7 +11,7 @@ from .loader import load_json, save_json
 
 
 
-def load_activities_module(module_name) -> ModuleType:
+def load_activities_module(module_name: str) -> ModuleType:
     module_spec = importlib.util.spec_from_file_location(
         module_name, f"./Activities/{module_name}.py"
     )
@@ -19,10 +19,10 @@ def load_activities_module(module_name) -> ModuleType:
     module_spec.loader.exec_module(activities_module)
     return activities_module
 
-def get_first_docs_or_exec(module_name, execute: bool = False) -> Any | None:
+def get_first_docs_or_exec(module_name: str, execute: bool = False) -> Any | None:
     # Load the activities module from the file
     activities_module = load_activities_module(module_name)
-    
+
     callable_functions = []
     docstrings = []
 
@@ -60,24 +60,24 @@ def slow_print(
     for char in text:
         print(char, end="", flush=True)
         sleep(uniform(0.1, 0.25) * (1 / speed))
-    
+
     sleep(sleepfor)
-    
+
     if newlineend:
         print()
-    
+
     if clear:
         clsscr()
 
 #TODO: MOVE TO Storymanager.py
 
-def save_game(character_name, character_info, current_story_index) -> None:
+def save_game(character_name: str, character_info: dict, current_story_index: int) -> None:
     character_info["saved_at"] = f"story{current_story_index}"
     character_story_data = load_json(f"./Stories/{character_name}.json")
     character_story_data[character_name] = character_info
     save_json(f"./Stories/{character_name}.json", character_story_data)
 
-def start_story(character_name) -> None:
+def start_story(character_name: str) -> None:
     character_story_data = load_json(f"./Stories/{character_name}.json")
 
     if character_name not in character_story_data:
@@ -91,7 +91,7 @@ def start_story(character_name) -> None:
         # Handle case where the character doesn't have an intro or has a broken story
         clsscr()
         slow_print(f"{character_name.capitalize()} doesn't have a valid story. Please pick another character.", sleepfor=2)
-        return
+        return 
 
     intro_text = character_info["intro"]
     clsscr()
@@ -122,10 +122,10 @@ def start_story(character_name) -> None:
             if f"askout{idx}" in character_story[f"story{current_story_index}"]:
                 askout_count += 1
                 slow_print(f"  {character_story[f'story{current_story_index}'][f'askout{idx}']} - [{idx}]")
-        
+
         if askout_count > 0:  # Check if there are askouts
             slow_print("\nWhich response are you picking? ", newlineend=False)
-        
+
             choice = input().strip()
             clsscr()
             if choice == "menu":
@@ -139,7 +139,7 @@ def start_story(character_name) -> None:
                     slow_print(f"No reaction text available for this choice.")
             else:
                 slow_print("Invalid choice. Please enter a valid option.")
-        
+
         # Save the game progress
         save_game(character_name ,character_info, current_story_index)
 
@@ -165,7 +165,7 @@ def check_activities() -> None:
                 slow_print(f"   {description} [{idx}]")
 
         slow_print("\nSelect an activity (enter the number): ", newlineend=False)
-        
+
         try:
             choice = int(input())
             if 1 <= choice <= len(activity_files):
@@ -181,9 +181,9 @@ def display_stats() -> None:
     display_player_stats()
     slow_print(f"\nYou can pick: {compare_stats()}", sleepfor=2, speed=10)
 
-def check_saves(character_name) -> Any:
+def check_saves(character_name: str) -> int:
     character_story_data = load_json(f"./Stories/{character_name}.json")
-    saved_at = character_story_data.get(character_name, {}).get("saved_at")
+    saved_at = int(character_story_data.get(character_name, {}).get("saved_at"))
     return saved_at
 
 def character_selector() -> None:
