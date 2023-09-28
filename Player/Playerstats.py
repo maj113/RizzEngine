@@ -6,12 +6,13 @@ from Utilities.loader import load_json, save_json
 
 json_file_path = "player_stats.json"  # Change this to the desired file path
 
-def generate_player_stats() -> Dict[str, int]:
+def generate_player_stats() -> Dict[str, int | str]:
     player_stats = {
         "jacked": random.randint(20, 100),
         "attraction": random.randint(20, 100),
         "looks": random.randint(1, 5),
-        "money": random.randrange(100, 1001, 50)
+        "money": random.randrange(100, 1001, 50),
+        "name" : ""
     }
     return player_stats
 
