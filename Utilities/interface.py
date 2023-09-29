@@ -181,9 +181,9 @@ def display_stats() -> None:
     display_player_stats()
     slow_print(f"\nYou can pick: {compare_stats()}", sleepfor=2, speed=10)
 
-def check_saves(character_name: str) -> int:
+def check_saves(character_name: str) -> str:
     character_story_data = load_json(f"./Stories/{character_name}.json")
-    saved_at = int(character_story_data.get(character_name, {}).get("saved_at"))
+    saved_at = character_story_data.get(character_name, {}).get("saved_at")
     return saved_at
 
 def character_selector() -> None:
