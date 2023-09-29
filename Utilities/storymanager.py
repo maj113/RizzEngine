@@ -19,7 +19,7 @@ def check_stories() -> Dict[str, dict]:
     return characters_stats
 
 # Use the process_directory function from loader.py to load character stats
-def compare_stats(player_stats=None, characters_stats=None) -> str:
+def compare_stats(player_stats: dict=None, characters_stats: Dict[str, dict] =None) -> str:
     """
     Compare player's stats with character stats and return available characters as a formatted string.
 
@@ -30,9 +30,9 @@ def compare_stats(player_stats=None, characters_stats=None) -> str:
     Returns:
         str: A formatted string containing character names that meet or exceed player's stats.
     """
-    if player_stats is None:
+    if not player_stats:
         player_stats = check_stats()
-    if characters_stats is None:
+    if not characters_stats:
         characters_stats = check_stories()
 
     # Initialize an empty list to store available characters
