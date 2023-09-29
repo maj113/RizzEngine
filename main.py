@@ -5,7 +5,7 @@ clsscr()
 
 if get_player_name():
 
-    slow_print("Welcome back!", sleepfor=1) 
+    slow_print(f"Welcome back {get_player_name()}!", sleepfor=1) 
 
 
 mainmenu()

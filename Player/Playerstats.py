@@ -1,17 +1,18 @@
 import random
 import os
-from typing import Any, Dict
+from typing import Dict
 
 from Utilities.loader import load_json, save_json
 
 json_file_path = "player_stats.json"  # Change this to the desired file path
 
-def generate_player_stats() -> Dict[str, int]:
+def generate_player_stats() -> Dict[str, int | str]:
     player_stats = {
         "jacked": random.randint(20, 100),
         "attraction": random.randint(20, 100),
         "looks": random.randint(1, 5),
-        "money": random.randrange(100, 1001, 50)
+        "money": random.randrange(100, 1001, 50),
+        "name" : ""
     }
     return player_stats
 
@@ -37,7 +38,7 @@ def get_player_name() -> str:
         create_player_name(stats)
     return name
 
-def create_player_name(stats: dict) -> str:
+def create_player_name(stats: Dict[str, str | int]) -> str:
     from Utilities.interface import slow_print
     slow_print("What's your name? ", newlineend=False)
     new_name = str(input()).capitalize()
@@ -45,16 +46,16 @@ def create_player_name(stats: dict) -> str:
     return new_name
 
 def update_player_stats(
-        player_stats: Dict[str, int], stats_change: Any, **stat_updates: str
+        player_stats: Dict[str, str | int], stats_change: str | int, **stat_updates: str
     ) -> None:
     """
     Update player stats and save them to a JSON file.
 
     Args:
         player_stats (dict): A dictionary containing player statistics.
-        stats_change (int): The amount by which the stats should be updated.
+        stats_change (str | int): The amount by which the stats should be updated.
         **stat_updates: Keyword arguments specifying the update operator for each stat.
-            Use 'plus' for addition and 'minus' for subtraction.
+            Use 'plus' for addition and 'minus' for subtraction, 'change' is also available.
 
     Example:
         To update 'jacked' and 'looks' with addition and 'money' with subtraction:
