@@ -1,7 +1,7 @@
-from Utilities.interface import mainmenu, slow_print, clsscr
+from Utilities.interface import mainmenu, slow_print, clrscr
 from Player.Playerstats import get_player_name
 
-clsscr()
+clrscr()
 
 if get_player_name():
 

@@ -1,6 +1,6 @@
 from typing import Dict
 
-from Utilities.interface import slow_print, clsscr
+from Utilities.interface import slow_print, clrscr
 from Utilities.loader import  load_json
 from Player.Playerstats import update_player_stats
 
@@ -18,12 +18,12 @@ def clothes_Shop() -> None:
     slow_print("You walk into the shop and start picking out clothes.", sleepfor=1)
 
     while True: #This loop begins the shopping process
-        clsscr()
+        clrscr()
         slow_print("Do you wish to shop? ", newlineend=False)
         will_buy = input().strip().lower() #asks player if they wish to shop (will_buy is meant to mean "will you buy something")
 
         if will_buy == "yes": #asks player if they wish to buy some clothes
-            clsscr()
+            clrscr()
             for idx, (wear, price) in enumerate(load_clothes_json().items(), start = 1): #display shopping options to player
                 slow_print(f"{wear} costs {price} - [{idx}]")
             slow_print("\nInput the name of the product you wish to buy: ", newlineend=False)

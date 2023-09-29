@@ -1,4 +1,4 @@
-from Utilities.interface import slow_print, display_stats, clsscr
+from Utilities.interface import slow_print, display_stats, clrscr
 from Utilities.loader import  load_json
 from Player.Playerstats import update_player_stats
 
@@ -15,7 +15,7 @@ def go_to_gym() -> None:
         try:
             slow_print("You decide to go workout. How long do you wanna work out for? ", newlineend=False)
             workoutTime = int(input())
-            clsscr()
+            clrscr()
 
             if workoutTime <= player_stats["money"]:
                 break
@@ -24,14 +24,14 @@ def go_to_gym() -> None:
                 return
 
         except ValueError:
-            clsscr()
+            clrscr()
             slow_print("Input a number next time, jackass!", sleepfor=2, clear=True)
 
 
     # Display a workout animation
     for _ in range(workoutTime):
         slow_print("💪", sleepfor=1, newlineend=False)
-    clsscr()
+    clrscr()
 
     # Update player stats
     update_player_stats(player_stats, workoutTime, jacked='plus', looks='plus', money='minus')

@@ -35,7 +35,7 @@ def get_first_docs_or_exec(module_name: str, execute: bool = False) -> Any | Non
                 docstrings.append(docstring.strip())
 
     if execute:
-        clsscr()
+        clrscr()
         if callable_functions:
             # Execute the last callable function
             return callable_functions[-1]()
@@ -46,7 +46,7 @@ def get_first_docs_or_exec(module_name: str, execute: bool = False) -> Any | Non
 
     return None
 
-def clsscr() -> None:
+def clrscr() -> None:
     """
     Clears the console screen using the appropriate command based on the OS.
     """
@@ -67,7 +67,7 @@ def slow_print(
         print()
 
     if clear:
-        clsscr()
+        clrscr()
 
 #TODO: MOVE TO Storymanager.py
 
@@ -81,7 +81,7 @@ def start_story(character_name: str) -> None:
     character_story_data = load_json(f"./Stories/{character_name}.json")
 
     if character_name not in character_story_data:
-        clsscr()
+        clrscr()
         slow_print(f"Character '{character_name}' not found in the Stories.")
         return
 
@@ -89,12 +89,12 @@ def start_story(character_name: str) -> None:
 
     if "intro" not in character_info:
         # Handle case where the character doesn't have an intro or has a broken story
-        clsscr()
+        clrscr()
         slow_print(f"{character_name.capitalize()} doesn't have a valid story. Please pick another character.", sleepfor=2)
         return 
 
     intro_text = character_info["intro"]
-    clsscr()
+    clrscr()
     slow_print(intro_text)
 
     slow_print(f"Do you want to pick {character_name}? (yes/no): ", newlineend=False)
@@ -102,13 +102,13 @@ def start_story(character_name: str) -> None:
 
     if choice != "yes":
         # Ask if they want to pick a different character
-        clsscr()
+        clrscr()
         slow_print("Do you want to pick a different character? (yes/no): ", newlineend=False)
         choice = input().strip().lower()
 
         if choice == "yes":
             return  # Return to character selection
-    clsscr()
+    clrscr()
     character_story = character_info.get("storizz", {})
     current_story_index = 0
 
@@ -127,7 +127,7 @@ def start_story(character_name: str) -> None:
             slow_print("\nWhich response are you picking? ", newlineend=False)
 
             choice = input().strip()
-            clsscr()
+            clrscr()
             if choice == "menu":
                 break  # Return to the main menu
             if choice.isdigit() and 1 <= int(choice) <= askout_count:
@@ -157,7 +157,7 @@ def check_activities() -> None:
     if not activity_files:
         print("No activity files found in the 'Activities' folder.")
     else:
-        clsscr()
+        clrscr()
         slow_print("Available Activities:\n", speed = 20)
         for idx, file_name in enumerate(activity_files, start=1):
             description = get_first_docs_or_exec(file_name[:-3])  # Remove '.py' extension
@@ -177,7 +177,7 @@ def check_activities() -> None:
             slow_print("Invalid input. Please enter a number.", sleepfor=2)
 
 def display_stats() -> None:
-    clsscr()
+    clrscr()
     display_player_stats()
     slow_print(f"\nYou can pick: {compare_stats()}", sleepfor=2, speed=10)
 
@@ -188,7 +188,7 @@ def check_saves(character_name: str) -> str:
 
 def character_selector() -> None:
     while True:
-        clsscr()
+        clrscr()
         characters_stats = check_stories()
         formatted_characters = compare_stats()
         available_characters = []
@@ -226,7 +226,7 @@ def character_selector() -> None:
             if selected_character_name in available_characters:
                 # Check for save state
                 if check_saves(character_name):
-                    clsscr()
+                    clrscr()
                     slow_print(f"You are about to overwrite the save state for {selected_character_name.capitalize()}. Continue? (yes/no): ", newlineend=False)
                     overwrite_choice = input().strip().lower()
 
@@ -235,14 +235,14 @@ def character_selector() -> None:
                 else:
                     start_story(selected_character_name)
             else:
-                clsscr()
+                clrscr()
                 slow_print("You can't select this character since your stats are too low", sleepfor=2)
         else:
-            clsscr()
+            clrscr()
             slow_print("Invalid choice. Please enter a valid option.", sleepfor=2)
 
 def available_options(selector: str = "main") -> None:
-    clsscr()
+    clrscr()
     if selector == "main":
         menu_options = [
             "Start new story [1]",
@@ -278,9 +278,9 @@ def mainmenu() -> None:
             if choice == 4:
                 display_stats()
             if choice == 5:
-                clsscr()
+                clrscr()
                 slow_print("Cya next time :)")
                 break
         else:
-            clsscr()
+            clrscr()
             slow_print("Invalid option!", sleepfor=2)
