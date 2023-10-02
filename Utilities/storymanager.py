@@ -1,6 +1,6 @@
 import os
 from typing import Dict
-from .loader import load_json, process_directory
+from .loader import load_json, save_json, process_directory
 
 # Specify the path to the player's stats JSON file
 player_stats_file = "player_stats.json"
@@ -8,8 +8,10 @@ player_stats_file = "player_stats.json"
 # Specify the directory containing character JSON files
 stories_directory = os.path.join(os.path.dirname(__file__), '..', 'Stories')
 
-# Load player stats using the load_json function from loader.py
 def check_stats() -> dict:
+    """
+    Load and return player stats from the JSON file.
+    """
     player_stats = load_json(player_stats_file)
     return player_stats
 
