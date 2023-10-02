@@ -9,14 +9,6 @@ from Player.Playerstats import display_player_stats, create_player_name
 from .loader import load_json,  load_activities_module, process_directory
 
 
-def load_activities_module(module_name: str) -> ModuleType:
-    module_spec = importlib.util.spec_from_file_location(
-        module_name, f"./Activities/{module_name}.py"
-    )
-    activities_module = importlib.util.module_from_spec(module_spec)
-    module_spec.loader.exec_module(activities_module)
-    return activities_module
-
 def get_first_docs_or_exec(module_name: str, execute: bool = False) -> Any | None:
     # Load the activities module from the file
     activities_module = load_activities_module(module_name)

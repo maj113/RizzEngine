@@ -25,4 +25,10 @@ def process_directory(directory_path: str = directory_path) -> Dict[str, dict]:
                 characters_stats[character_name] = character_data
     return characters_stats
 
-  # Assuming 'utilities' and 'stories' are at the same level
+def load_activities_module(module_name: str) -> ModuleType:
+    module_spec = importlib.util.spec_from_file_location(
+        module_name, f"./Activities/{module_name}.py"
+    )
+    activities_module = importlib.util.module_from_spec(module_spec)
+    module_spec.loader.exec_module(activities_module)
+    return activities_module
