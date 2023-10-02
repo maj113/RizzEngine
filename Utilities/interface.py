@@ -176,15 +176,6 @@ def check_activities() -> None:
         except ValueError:
             slow_print("Invalid input. Please enter a number.", sleepfor=2)
 
-def display_stats() -> None:
-    clrscr()
-    display_player_stats()
-    slow_print(f"\nYou can pick: {compare_stats()}", sleepfor=2, speed=10)
-
-def check_saves(character_name: str) -> str:
-    character_story_data = load_json(f"./Stories/{character_name}.json")
-    saved_at = character_story_data.get(character_name, {}).get("saved_at")
-    return saved_at
 
 def character_selector() -> None:
     while True:
@@ -240,6 +231,11 @@ def character_selector() -> None:
         else:
             clrscr()
             slow_print("Invalid choice. Please enter a valid option.", sleepfor=2)
+
+def display_stats() -> None:
+    clrscr()
+    slow_print(display_player_stats(), newlineend=False)
+    slow_print(f"\nYou can pick: {compare_stats()}", sleepfor=2, speed=10)
 
 class Mainmenu:
     def __init__(self) -> None:
