@@ -40,7 +40,8 @@ def get_player_name() -> str:
         create_player_name(stats)
     return name
 
-def create_player_name(stats: Dict[str, str | int]) -> str:
+def create_player_name() -> str:
+    stats = load_json(json_file_path)
     from Utilities.interface import slow_print
     slow_print("What's your name? ", newlineend=False)
     new_name = str(input()).capitalize()
