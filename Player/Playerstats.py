@@ -20,16 +20,18 @@ if not os.path.exists(json_file_path):
     player_stats = generate_player_stats()
     save_json(json_file_path, player_stats)
 
-def display_player_stats() -> None:
+def display_player_stats() -> str | None:
     player_stats = load_json(json_file_path)
+    stats_str = ""
 
     if player_stats:
-        from Utilities.interface import slow_print
-        slow_print("Player Stats:\n")
+        stats_str += "Player Stats:\n"
         for stat, value in player_stats.items():
-            slow_print(f"   {stat.capitalize()}: {value}")
+            stats_str += f"   {stat.capitalize()}: {value}\n"
+
+        return stats_str
     else:
-        print("No player stats found.")
+        return "No player stats found."
 
 def get_player_name() -> str:
     stats = load_json(json_file_path)
