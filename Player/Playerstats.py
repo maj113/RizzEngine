@@ -53,16 +53,6 @@ def update_player_stats(
     ) -> None:
     """
     Update player stats and save them to a JSON file.
-
-    Args:
-        player_stats (dict): A dictionary containing player statistics.
-        stats_change (str | int): The amount by which the stats should be updated.
-        **stat_updates: Keyword arguments specifying the update operator for each stat.
-            Use 'plus' for addition and 'minus' for subtraction, 'change' is also available.
-
-    Example:
-        To update 'jacked' and 'looks' with addition and 'money' with subtraction:
-        update_and_save_player_stats(player_stats, 10, jacked='plus', looks='plus', money='minus')
     """
     # Update player stats based on the provided keyword arguments
     for stat_name, update_operator in stat_updates.items():
