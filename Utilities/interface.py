@@ -241,46 +241,58 @@ def character_selector() -> None:
             clrscr()
             slow_print("Invalid choice. Please enter a valid option.", sleepfor=2)
 
-def available_options(selector: str = "main") -> None:
-    clrscr()
-    if selector == "main":
-        menu_options = [
-            "Start new story [1]",
-            "Continue Story [2]",
-            "Do some activities [3]",
-            "Check stats and characters [4]",
-            "Save and Quit [5]\n"
-        ]
-        slow_print("\n".join(menu_options), speed=20)
-    if selector == "activities":
-        check_activities()
-    if selector == "character_selection":
-        character_selector()
+class Mainmenu:
+    def __init__(self) -> None:
+        self.menu_options = {
+            "Start new story": self.start_new_story,
+            "Continue Story": None,  # Placeholder for the continue action
+            "Do some activities": self.activity_picker,
+            "Check stats and characters": display_stats, 
+            "Change player's name": create_player_name,
+            "Save and Quit": self.quit_game,
+        }
 
+        self.valid_choices = list(range(1, len(self.menu_options) + 1))
 
+    def start_new_story(self) -> None:
+        self.available_options("character_selection")
 
+    def activity_picker(self) -> None:
+        self.available_options("activities")
 
-def mainmenu() -> None:
-    valid_choices = [1, 2, 3, 4, 5]
+    def quit_game(self):
+        clrscr()
+        slow_print("Cya next time :)")
+        sys.exit(0)
 
-    while True:
-        available_options()
-        slow_print("What are you picking? ", newlineend=False)
-        choice = int(input())
+    def available_options(self, selector: str = "main") -> None:
+        clrscr()
+        if selector == "main":
+            menu = [f"{menu_option} [{idx}]" for idx, menu_option in enumerate(self.menu_options.keys(), start=1)]
+            slow_print("\n".join(menu), speed=20)
+        if selector == "activities":
+            check_activities()
+        if selector == "character_selection":
+            character_selector()
 
-        if choice in valid_choices:
-            if choice == 1:
-                available_options("character_selection")
-            if choice == 2:
-                continue
-            if choice == 3:
-                available_options(selector="activities")
-            if choice == 4:
-                display_stats()
-            if choice == 5:
+    def mainmenu(self) -> None:
+        while True:
+            self.available_options()
+            slow_print("\nWhat are you picking? ", newlineend=False)
+            choice = input()
+
+            if not choice.isdigit():
                 clrscr()
-                slow_print("Cya next time :)")
-                break
-        else:
-            clrscr()
-            slow_print("Invalid option!", sleepfor=2)
+                slow_print("Invalid option!", sleepfor=2)
+                continue
+
+            choice = int(choice)
+            if choice not in self.valid_choices:
+                clrscr()
+                slow_print("Invalid choice!", sleepfor=2)
+                continue
+
+            for idx, (menu_option, function) in enumerate(self.menu_options.items(), start=1):
+                if idx == choice and callable(function):
+                    function()  # Call the associated function
+                    break
