@@ -59,3 +59,9 @@ def compare_stats(player_stats: dict=None, characters_stats: Dict[str, dict] =No
 
     return formatted_characters  # Return the formatted string
 
+
+def save_game(character_name: str, character_info: dict, current_story_index: int) -> None:
+    character_info["saved_at"] = f"story{current_story_index}"
+    character_story_data = load_json(os.path.join(stories_directory, f"{character_name}.json"))
+    character_story_data[character_name] = character_info
+    save_json(os.path.join(stories_directory, f"{character_name}.json"), character_story_data)

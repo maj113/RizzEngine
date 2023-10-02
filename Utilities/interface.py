@@ -70,13 +70,6 @@ def slow_print(
         clrscr()
 
 #TODO: MOVE TO Storymanager.py
-
-def save_game(character_name: str, character_info: dict, current_story_index: int) -> None:
-    character_info["saved_at"] = f"story{current_story_index}"
-    character_story_data = load_json(f"./Stories/{character_name}.json")
-    character_story_data[character_name] = character_info
-    save_json(f"./Stories/{character_name}.json", character_story_data)
-
 def start_story(character_name: str) -> None:
     character_story_data = load_json(f"./Stories/{character_name}.json")
 
