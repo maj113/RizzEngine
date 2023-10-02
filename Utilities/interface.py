@@ -180,7 +180,7 @@ def check_activities() -> None:
 def character_selector() -> None:
     while True:
         clrscr()
-        characters_stats = check_stories()
+        characters_stats = process_directory()
         formatted_characters = compare_stats()
         available_characters = []
 
