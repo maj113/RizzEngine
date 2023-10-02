@@ -1,0 +1,70 @@
+# For most projects, this workflow file will not need changing; you simply need
+# to commit it to your repository.
+#
+# You may wish to alter this file to override the set of languages analyzed,
+# or to provide custom queries or build logic.
+#
+# ******** NOTE ********
+# We have attempted to detect the languages in your repository. Please check
+# the `language` matrix defined below to confirm you have the correct set of
+# supported CodeQL languages.
+#
+name: "CodeQL"
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - '**.py'
+  pull_request:
+    paths:
+      - '**.py'
+
+    
+  schedule:
+    - cron: '00 00 * * *'
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python_version: ["3.11"]
+  # 3.12 is failing for now, use this to track when it starts working again
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Set up Python 3.11
+    - name: Set up Python "${{ matrix.python_version }}"
+      uses: actions/setup-python@v4.7.1
+      with:
+        python-version: ${{ matrix.python_version }}
+        allow-prereleases: true
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2.21.9
+      with:
+        tools: 
+        languages: 'python'
+        queries:
+          security-and-quality
+        config: |
+          query-filters:
+            - exclude:
+                id: py/mixed-returns
+
+    # Perform CodeQL Analysis
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2.21.9
+      with:
+        category: "/language:'python'"
