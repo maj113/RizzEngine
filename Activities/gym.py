@@ -13,15 +13,16 @@ def go_to_gym() -> None:
     # Get the desired workout time from the player
     while True:
         try:
-            slow_print("You decide to go workout. How long do you wanna work out for? ", newlineend=False)
+            slow_print(
+                "You decide to go workout. How long do you wanna work out for? ", newlineend=False
+            )
             workoutTime = int(input())
             clrscr()
 
             if workoutTime <= player_stats["money"]:
                 break
             else:
-                slow_print("Brotha you broke asf, lazy ass mf go work", sleepfor=2)
-                return
+                return slow_print("Brotha you broke asf, lazy ass mf go work", sleepfor=2)
 
         except ValueError:
             clrscr()
@@ -37,6 +38,8 @@ def go_to_gym() -> None:
     update_player_stats(player_stats, workoutTime, jacked='plus', looks='plus', money='minus')
 
     # Show post-workout message and updated stats
-    slow_print("You feel better about yourself and you look a lot better.", sleepfor=2, newlineend=False)
+    slow_print(
+        "You feel better about yourself and you look a lot better.", sleepfor=2, newlineend=False
+    )
     display_stats()
 
