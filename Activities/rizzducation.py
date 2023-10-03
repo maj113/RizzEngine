@@ -29,11 +29,11 @@ def take_rizz_classes() -> None:
         )
     clrscr()
     #checks if player has enough money
-    if required_money <= player_stats["money"]:
+    if REQUIRED_MONEY <= player_stats["money"]:
 
         # Display a taking notes animation
         for i in range(5):
-            slow_print(random.choice(quotes), sleepfor=8, newlineend=False)
+            slow_print(random.choice(QUOTES), sleepfor=8, newlineend=False)
             clrscr()
 
         # Update player stats
