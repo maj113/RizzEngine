@@ -5,8 +5,8 @@ from Utilities.loader import load_json
 from Player.Playerstats import update_player_stats
 
 def load_clothes_json() -> Dict[str, int]:
-    clothes_shop = load_json("./Activities/clothesShop.json")
-    clothes_in_shop = clothes_shop.get("clothes", {})
+    loaded_clothes_shop = load_json("./Activities/clothesShop.json")
+    clothes_in_shop = loaded_clothes_shop.get("clothes", {})
     return clothes_in_shop
 
 def clothes_shop() -> None:
