@@ -37,7 +37,7 @@ def get_player_name() -> str:
     stats = load_json(json_file_path)
     name = str(stats.get("name"))
     if not name:
-        create_player_name(stats)
+        create_player_name()
     return name
 
 def create_player_name() -> str:
