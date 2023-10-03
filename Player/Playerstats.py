@@ -4,44 +4,44 @@ from typing import Dict
 
 from Utilities.loader import load_json, save_json
 
-json_file_path = "player_stats.json"  # Change this to the desired file path
+JSON_FILE_PATH = "player_stats.json"
 
 def generate_player_stats() -> Dict[str, int | str]:
-    player_stats = {
+    created_player_stats = {
         "jacked": random.randint(20, 100),
         "attraction": random.randint(20, 100),
         "looks": random.randint(1, 5),
         "money": random.randrange(100, 1001, 50),
         "name" : ""
     }
-    return player_stats
+    return created_player_stats
 
-if not os.path.exists(json_file_path):
-    player_stats = generate_player_stats()
-    save_json(json_file_path, player_stats)
+if not os.path.exists(JSON_FILE_PATH):
+    saved_player_stats = generate_player_stats()
+    save_json(JSON_FILE_PATH, saved_player_stats)
 
 def display_player_stats() -> str | None:
-    player_stats = load_json(json_file_path)
+    loaded_player_stats = load_json(JSON_FILE_PATH)
     stats_str = ""
 
-    if player_stats:
+    if loaded_player_stats:
         stats_str += "Player Stats:\n"
-        for stat, value in player_stats.items():
+        for stat, value in loaded_player_stats.items():
             stats_str += f"   {stat.capitalize()}: {value}\n"
 
         return stats_str
-    else:
-        return "No player stats found."
+
+    return "No player stats found."
 
 def get_player_name() -> str:
-    stats = load_json(json_file_path)
+    stats = load_json(JSON_FILE_PATH)
     name = str(stats.get("name"))
     if not name:
         create_player_name()
     return name
 
 def create_player_name() -> str:
-    stats = load_json(json_file_path)
+    stats = load_json(JSON_FILE_PATH)
     from Utilities.interface import slow_print
     slow_print("What's your name? ", newlineend=False)
     new_name = str(input()).capitalize()
