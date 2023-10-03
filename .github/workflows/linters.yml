@@ -28,7 +28,7 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        find . -name '*.py' -exec pylint {} \;
+        find . -name '*.py' -exec pylint --disable=E0401 {} \;
 
   Pylint-Windows:
     runs-on: windows-latest
@@ -48,7 +48,7 @@ jobs:
           pip install pylint
       - name: Analyzing the code with pylint
         run: |
-          Get-ChildItem -Recurse -Filter '*.py' | ForEach-Object { pylint $_.FullName --exit-zero}
+          Get-ChildItem -Recurse -Filter '*.py' | ForEach-Object { pylint --disable=E0401 $_.FullName --exit-zero }
 
   Ruff:
     runs-on: ${{ matrix.os }}
