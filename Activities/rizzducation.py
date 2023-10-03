@@ -4,10 +4,10 @@ from Player.Playerstats import update_player_stats
 import random
 
 #this is the money required to take one rizz class
-required_money = 30
+REQUIRED_MONEY = 30
 
 #random semi humorous qotes that appear while the player waits for the classes to end
-quotes = {
+QUOTES = {
         1: " remembering the digits of pi",
         2: " scrolling phone cuz teacher boring",
         3: " quoting Napoleon",
