@@ -2,7 +2,7 @@ import os
 from .loader import load_json, save_json, process_directory
 
 # Specify the path to the player's stats JSON file
-player_stats_file = "player_stats.json"
+PLAYER_STATS_FILE = "player_stats.json"
 
 # Specify the directory containing character JSON files
 stories_directory = os.path.join(os.path.dirname(__file__), '..', 'Stories')
@@ -11,12 +11,12 @@ def check_stats() -> dict:
     """
     Load and return player stats from the JSON file.
     """
-    player_stats = load_json(player_stats_file)
+    player_stats = load_json(PLAYER_STATS_FILE)
     return player_stats
 
 def compare_stats(player_stats=None, characters_stats=None) -> str:
     """
-    Compare player's stats with character stats and return available characters as a formatted string.
+    Compare player's stats with char stats and return allowed characters as a formatted string.
 
     Args:
         player_stats (dict): A dictionary containing the player's stats.
