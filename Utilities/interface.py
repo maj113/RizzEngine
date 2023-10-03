@@ -108,7 +108,9 @@ def start_story(character_name: str) -> None:
         for idx in range(1, 4):
             if f"askout{idx}" in character_story[f"story{current_story_index}"]:
                 askout_count += 1
-                slow_print(f"  {character_story[f'story{current_story_index}'][f'askout{idx}']} - [{idx}]")
+                choice_text = character_story[f'story{current_story_index}'][f'askout{idx}']
+                line = f"  {choice_text} - [{idx}]"
+                slow_print(line)
 
         if askout_count > 0:  # Check if there are askouts
             slow_print("\nWhich response are you picking? ", newlineend=False)
@@ -121,7 +123,8 @@ def start_story(character_name: str) -> None:
                 choice_key = f"askout{choice}"
                 reaction_key = f"reaction{choice}"
                 if choice_key in character_story[f"story{current_story_index}"]:
-                    slow_print(f'{character_name.capitalize()}: {character_story[f"story{current_story_index}"][reaction_key]}')
+                    reaction_text = character_story[f"story{current_story_index}"][reaction_key]
+                    slow_print(f'{character_name.capitalize()}: {reaction_text}')
                 else:
                     slow_print("No reaction text available for this choice.")
             else:
@@ -189,10 +192,16 @@ def character_selector() -> None:
             slow_print(message)
 
         if not available_characters:
-            slow_print("You can't select any character, do some activities and increase your stats", sleepfor=2)
+            slow_print(
+                "You can't select any character, do some activities and increase your stats",
+                sleepfor=2
+            )
             return
 
-        slow_print("\nSelect a character (enter the number) or 'menu' to go back: ", newlineend=False)
+        slow_print(
+            "\nSelect a character (enter the number) or 'menu' to go back: ",
+            newlineend=False
+        )
         choice = input().strip()
 
         if choice == "menu":
@@ -205,7 +214,11 @@ def character_selector() -> None:
                 # Check for save state
                 if check_saves(character_name):
                     clrscr()
-                    slow_print(f"You are about to overwrite the save state for {selected_character_name.capitalize()}. Continue? (yes/no): ", newlineend=False)
+                    slow_print(
+                        "You are about to overwrite the save state for"
+                        f" {selected_character_name.capitalize()}. Continue? (yes/no): ",
+                        newlineend=False
+                    )
                     overwrite_choice = input().strip().lower()
 
                     if overwrite_choice == "yes":
@@ -214,7 +227,10 @@ def character_selector() -> None:
                     start_story(selected_character_name)
             else:
                 clrscr()
-                slow_print("You can't select this character since your stats are too low", sleepfor=2)
+                slow_print(
+                    "You can't select this character since your stats are too low",
+                    sleepfor=2
+                )
         else:
             clrscr()
             slow_print("Invalid choice. Please enter a valid option.", sleepfor=2)
@@ -251,7 +267,10 @@ class Mainmenu:
     def available_options(self, selector: str = "main") -> None:
         clrscr()
         if selector == "main":
-            menu = [f"{menu_option} [{idx}]" for idx, menu_option in enumerate(self.menu_options.keys(), start=1)]
+            menu = [f"{menu_option} [{idx}]" for idx, menu_option in enumerate(
+                self.menu_options.keys(), start=1
+                )
+            ]
             slow_print("\n".join(menu), speed=20)
         if selector == "activities":
             check_activities()
