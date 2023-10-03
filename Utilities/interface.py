@@ -74,7 +74,7 @@ def start_story(character_name: str) -> None:
         # Handle case where the character doesn't have an intro or has a broken story
         clrscr()
         slow_print(f"{character_name.capitalize()} doesn't have a valid story. Please pick another character.", sleepfor=2)
-        return 
+        return
 
     intro_text = character_info["intro"]
     clrscr()
