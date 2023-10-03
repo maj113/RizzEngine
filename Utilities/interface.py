@@ -268,7 +268,7 @@ class Mainmenu:
         clrscr()
         if selector == "main":
             menu = [f"{menu_option} [{idx}]" for idx, menu_option in enumerate(
-                self.menu_options.keys(), start=1
+                    self.menu_options.keys(), start=1
                 )
             ]
             slow_print("\n".join(menu), speed=20)
