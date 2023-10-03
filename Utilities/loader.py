@@ -9,17 +9,17 @@ from types import ModuleType
 directory_path = os.path.join(os.path.dirname(__file__), '..', 'stories')
 
 def load_json(file_path: str) -> dict:
-    with open(file_path, 'r') as json_file:
+    with open(file_path, 'r', encoding='utf-8') as json_file:
         data = json.load(json_file)
     return data
 
 def save_json(file_path: str, data: dict) -> None:
-    with open(file_path, 'w') as json_file:
-        json.dump(data, json_file, indent=4)
+    with open(file_path, 'w', encoding='utf-8') as json_file:
+        json.dump(data, json_file, indent=4, ensure_ascii=False)
 
-def process_directory(directory_path: str = directory_path) -> Dict[str, dict]:
+def process_directory(directory_path_var: str = directory_path) -> Dict[str, dict]:
     characters_stats = {}
-    for root, _, files in os.walk(directory_path):
+    for root, _, files in os.walk(directory_path_var):
         for file_name in files:
             if file_name.endswith(".json"):
                 file_path = os.path.join(root, file_name)
