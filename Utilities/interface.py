@@ -4,8 +4,8 @@ from time import sleep
 from random import uniform
 from typing import Any
 
-from .storymanager import compare_stats, check_saves, save_game
 from Player.Playerstats import display_player_stats, create_player_name
+from .storymanager import compare_stats, check_saves, save_game
 from .loader import load_json,  load_activities_module, process_directory
 
 
@@ -119,7 +119,7 @@ def start_story(character_name: str) -> None:
                 if choice_key in character_story[f"story{current_story_index}"]:
                     slow_print(f'{character_name.capitalize()}: {character_story[f"story{current_story_index}"][reaction_key]}')
                 else:
-                    slow_print(f"No reaction text available for this choice.")
+                    slow_print("No reaction text available for this choice.")
             else:
                 slow_print("Invalid choice. Please enter a valid option.")
 
@@ -193,7 +193,7 @@ def character_selector() -> None:
 
         if choice == "menu":
             break
-        elif choice.isdigit() and 1 <= int(choice) <= len(characters_stats):
+        if choice.isdigit() and 1 <= int(choice) <= len(characters_stats):
             selected_character_index = int(choice) - 1
             selected_character_name = list(characters_stats.keys())[selected_character_index]
 
@@ -226,7 +226,7 @@ class Mainmenu:
             "Start new story": self.start_new_story,
             "Continue Story": None,  # Placeholder for the continue action
             "Do some activities": self.activity_picker,
-            "Check stats and characters": display_stats, 
+            "Check stats and characters": display_stats,
             "Change player's name": create_player_name,
             "Save and Quit": self.quit_game,
         }
@@ -271,7 +271,7 @@ class Mainmenu:
                 slow_print("Invalid choice!", sleepfor=2)
                 continue
 
-            for idx, (menu_option, function) in enumerate(self.menu_options.items(), start=1):
+            for idx, (_, function) in enumerate(self.menu_options.items(), start=1):
                 if idx == choice and callable(function):
                     function()  # Call the associated function
                     break
