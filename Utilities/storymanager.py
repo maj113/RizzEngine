@@ -1,5 +1,4 @@
 import os
-from typing import Dict
 from .loader import load_json, save_json, process_directory
 
 # Specify the path to the player's stats JSON file
