@@ -36,7 +36,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python_version: ["3.12"]
+        python_version: ["3.11"]
   # 3.12 is failing for now, use this to track when it starts working again
 
     steps:
