@@ -17,7 +17,7 @@ def get_first_docs_or_exec(module_name: str, execute: bool = False) -> Any | Non
     docstrings = []
 
     # Find callable functions and collect their docstrings
-    for name, func in vars(activities_module).items():
+    for _, func in vars(activities_module).items():
         if callable(func):
             docstring = func.__doc__
             if docstring:
