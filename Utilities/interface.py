@@ -40,7 +40,7 @@ def clrscr() -> None:
     """
     Clears the console screen using the appropriate command based on the OS.
     """
-    os.system('cls' if os.name == 'nt' else 'clear')
+    print("\033c", end="", flush=True)
 
 def slow_print(
         text: str, speed: int = 5,
