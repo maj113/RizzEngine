@@ -1,7 +1,8 @@
+import random
+
 from Utilities.interface import slow_print, display_stats, clrscr
 from Utilities.loader import  load_json
 from Player.Playerstats import update_player_stats
-import random
 
 #this is the money required to take one rizz class
 REQUIRED_MONEY = 30
@@ -20,7 +21,7 @@ QUOTES = {
 
 def take_rizz_classes() -> None:
     """Take rizz classes from a trained professional (costs $30)"""
-    
+
     # Load player stats
     player_stats = load_json("player_stats.json")
 
@@ -32,7 +33,7 @@ def take_rizz_classes() -> None:
     if REQUIRED_MONEY <= player_stats["money"]:
 
         # Display a taking notes animation
-        for i in range(5):
+        for _ in range(5):
             slow_print(random.choice(QUOTES), sleepfor=8, newlineend=False)
             clrscr()
 
@@ -42,13 +43,9 @@ def take_rizz_classes() -> None:
         # Show post-class message and updated stats
         slow_print(
             "By some miracle you managed to remember something.", sleepfor=2, newlineend=False
-            )
+        )
         display_stats()
 
-    else: slow_print("The janitor takes offense to your lackluster amount of money. BYE!", sleepfor=2)
-
-
-
-
-
-
+    else: slow_print(
+        "The janitor takes offense to your lackluster amount of money. BYE!", sleepfor=2
+    )
