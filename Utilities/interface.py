@@ -13,26 +13,22 @@ def get_first_docs_or_exec(module_name: str, execute: bool = False) -> Any | Non
     # Load the activities module from the file
     activities_module = load_activities_module(module_name)
 
-    callable_functions = []
-    docstrings = []
-
-    # Find callable functions and collect their docstrings
-    for _, func in vars(activities_module).items():
-        if callable(func):
+    # Find the first callable function with the "activity" prefix and collect its docstring
+    for name, func in vars(activities_module).items():
+        if callable(func) and name.startswith("activity"):
             docstring = func.__doc__
             if docstring:
-                callable_functions.append(func)
-                docstrings.append(docstring.strip())
+                callable_function = func
+                break  # Stop the loop when the first matching function is found
 
     if execute:
         clrscr()
-        if callable_functions:
-            # Execute the last callable function
-            return callable_functions[-1]()
+        if callable_function:
+            return callable_function()
 
-    # Return the docstring of the last callable function (or None if none found)
-    if docstrings:
-        return docstrings[-1]
+    # Return the docstring of the first matching function (or None if none found)
+    if docstring:
+        return docstring.strip()
 
     return None
 
@@ -147,13 +143,14 @@ def check_activities() -> None:
     if not activity_files:
         print("No activity files found in the 'Activities' folder.")
     else:
-        clrscr()
-        slow_print("Available Activities:\n", speed = 20)
-        for idx, file_name in enumerate(activity_files, start=1):
+        clrscr() 
+        slow_print("Available Activities:\n", speed=20)
+        idx = 1  # Initialize idx outside the loop
+        for file_name in activity_files:
             description = get_first_docs_or_exec(file_name[:-3])  # Remove '.py' extension
             if description:
                 slow_print(f"   {description} [{idx}]")
-
+                idx += 1  # Increment idx only when description is truthy
         slow_print("\nSelect an activity (enter the number): ", newlineend=False)
 
         try:

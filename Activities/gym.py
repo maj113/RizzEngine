@@ -3,7 +3,7 @@ from Utilities.loader import  load_json
 from Player.Playerstats import update_player_stats
 
 
-def go_to_gym() -> None:
+def activity_go_to_gym() -> None:
     """Go to the gym"""
 
     # Load player stats

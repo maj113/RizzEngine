@@ -9,7 +9,7 @@ def load_clothes_json() -> Dict[str, int]:
     clothes_in_shop = loaded_clothes_shop.get("clothes", {})
     return clothes_in_shop
 
-def clothes_shop() -> None:
+def activity_clothes_shop() -> None:
     """Go shopping for clothes"""
 
     #loads json files

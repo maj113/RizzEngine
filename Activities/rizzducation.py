@@ -19,7 +19,7 @@ QUOTES = {
         8: " yassifying you"
     }
 
-def take_rizz_classes() -> None:
+def activity_take_rizz_classes() -> None:
     """Take rizz classes from a trained professional (costs $30)"""
 
     # Load player stats
