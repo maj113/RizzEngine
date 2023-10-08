@@ -244,7 +244,7 @@ class Mainmenu:
             "Continue Story": None,  # Placeholder for the continue action
             "Do some activities": self.activity_picker,
             "Check stats and characters": display_stats,
-            "Change player's name": create_player_name,
+            "Change player's name": self.name_change,
             "Save and Quit": self.quit_game,
         }
 
@@ -260,6 +260,10 @@ class Mainmenu:
         clrscr()
         slow_print("Cya next time :)")
         sys.exit(0)
+
+    def name_change(self):
+        clrscr()
+        create_player_name()
 
     def available_options(self, selector: str = "main") -> None:
         clrscr()
