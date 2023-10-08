@@ -4,7 +4,7 @@ from time import sleep
 from random import uniform
 from typing import Any
 
-from Player.Playerstats import display_player_stats, create_player_name
+from Player.Playerstats import display_player_stats, view_or_modify_player_name
 from .storymanager import compare_stats, check_saves, save_game
 from .loader import load_json,  load_activities_module, process_directory
 
@@ -263,7 +263,34 @@ class Mainmenu:
 
     def name_change(self):
         clrscr()
-        create_player_name()
+        name = input("What's your name? ")
+
+        current_name = view_or_modify_player_name()
+        if current_name is None:
+            # No name is set, so we set the provided name
+            view_or_modify_player_name(name)
+            slow_print(f"Your name is now: {name}", sleepfor=2)
+        elif current_name == name:
+            # Don't change the name if it's the same
+            clrscr()
+            slow_print("Your name hasn't changed", sleepfor=2)
+        else:
+            # Ask for confirmation using slow_print
+            clrscr()
+            slow_print(
+                f"Are you sure you want to update your name to '{name}'? (yes/no): ",
+                newlineend=False
+            )
+            
+            confirmation = input().strip().lower()
+            clrscr()
+            if confirmation == 'yes':
+                ()
+                view_or_modify_player_name(name)
+                slow_print(f"Your name is now: {name}", sleepfor=2)
+            else:
+                slow_print("Name update cancelled.", sleepfor=2)
+        
 
     def available_options(self, selector: str = "main") -> None:
         clrscr()
