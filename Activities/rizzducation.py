@@ -35,7 +35,7 @@ def activity_take_rizz_classes() -> None:
 
         # Display a taking notes animation
         for _ in range(5):
-            slow_print(random.choice(list(QUOTES.keys())), sleepfor=8, newlineend=False)
+            slow_print(random.choice(list(QUOTES.values())), sleepfor=8, newlineend=False)
             clrscr()
 
         # Update player stats
