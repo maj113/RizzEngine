@@ -33,20 +33,13 @@ def display_player_stats() -> str | None:
 
     return "No player stats found."
 
-def get_player_name() -> str:
+def view_or_modify_player_name(name: str | None = None):
     stats = load_json(JSON_FILE_PATH)
-    name = str(stats.get("name"))
+    if not name and "name" not in stats:
+        return None
     if not name:
-        create_player_name()
-    return name
-
-def create_player_name() -> str:
-    stats = load_json(JSON_FILE_PATH)
-    from Utilities.interface import slow_print
-    slow_print("What's your name? ", newlineend=False)
-    new_name = str(input()).capitalize()
-    update_player_stats(stats, new_name, name='change')
-    return new_name
+        return stats["name"]
+    update_player_stats(stats, name.capitalize(), name='change')
 
 def update_player_stats(
         player_stats: Dict[str, str | int], stats_change: str | int, **stat_updates: str
