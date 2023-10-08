@@ -1,11 +1,13 @@
 from Utilities.interface import Mainmenu, slow_print, clrscr
-from Player.Playerstats import get_player_name
+from Player.Playerstats import view_or_modify_player_name
 
+menu = Mainmenu()
 clrscr()
 
-if get_player_name():
+if view_or_modify_player_name():
 
-    slow_print(f"Welcome back {get_player_name()}!", sleepfor=1)
+    slow_print(f"Welcome back {view_or_modify_player_name()}!", sleepfor=1)
+else: menu.name_change()
 
 
-Mainmenu().mainmenu()
+menu.mainmenu()
