@@ -26,7 +26,8 @@ def activity_take_rizz_classes() -> None:
     player_stats = load_json("player_stats.json")
 
     slow_print(
-        "You decide to go take rizz classes tought by your school janitor. ", newlineend=False
+        "You decide to go take rizz classes tought by your school janitor. ",
+        newlineend=False, sleepfor=1
         )
     clrscr()
     #checks if player has enough money
@@ -34,7 +35,7 @@ def activity_take_rizz_classes() -> None:
 
         # Display a taking notes animation
         for _ in range(5):
-            slow_print(random.choice(QUOTES), sleepfor=8, newlineend=False)
+            slow_print(random.choice(list(QUOTES.keys())), sleepfor=8, newlineend=False)
             clrscr()
 
         # Update player stats
