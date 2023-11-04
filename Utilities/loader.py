@@ -1,23 +1,21 @@
-import os
-import json
 import importlib.util
-
-from typing import Dict
+import json
+import os
 from types import ModuleType
-
+from typing import Any, Dict
 
 directory_path = os.path.join(os.path.dirname(__file__), '..', 'stories')
 
-def load_json(file_path: str) -> dict:
+def load_json(file_path: str) -> Dict[Any, Any]:
     with open(file_path, 'r', encoding='utf-8') as json_file:
         data = json.load(json_file)
     return data
 
-def save_json(file_path: str, data: dict) -> None:
+def save_json(file_path: str, data: Dict[Any, Any]) -> None:
     with open(file_path, 'w', encoding='utf-8') as json_file:
         json.dump(data, json_file, indent=4, ensure_ascii=False)
 
-def process_directory(directory_path_var: str = directory_path) -> Dict[str, dict]:
+def process_directory(directory_path_var: str = directory_path) -> Dict[str, Dict[str, str]]:
     characters_stats = {}
     for root, _, files in os.walk(directory_path_var):
         for file_name in files:

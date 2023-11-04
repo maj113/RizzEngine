@@ -1,8 +1,9 @@
 import random
 
-from Utilities.interface import slow_print, display_stats, clrscr
-from Utilities.loader import  load_json
 from Player.Playerstats import update_player_stats
+from Utilities.interface import clrscr, display_stats, slow_print
+from Utilities.loader import load_json
+from Player.moneymanager import character_has_money
 
 #this is the money required to take one rizz class
 REQUIRED_MONEY = 30
@@ -31,7 +32,7 @@ def activity_take_rizz_classes() -> None:
         )
     clrscr()
     #checks if player has enough money
-    if REQUIRED_MONEY <= player_stats["money"]:
+    if character_has_money(REQUIRED_MONEY):
 
         # Display a taking notes animation
         for _ in range(5):

@@ -1,5 +1,6 @@
 import os
-from .loader import load_json, save_json, process_directory
+
+from .loader import load_json, process_directory, save_json
 
 # Specify the path to the player's stats JSON file
 PLAYER_STATS_FILE = "player_stats.json"
@@ -52,6 +53,20 @@ def check_saves(character_name: str) -> str:
     character_story_data = load_json(os.path.join(stories_directory, f"{character_name}.json"))
     saved_at = character_story_data.get(character_name, {}).get("saved_at")
     return saved_at
+
+def get_saves_index(character_name: str) -> int | None:
+    save_string = check_saves(character_name)  # Call check_saves with character_name
+    if save_string and save_string.startswith("story"):
+        # Extract the number part of the string after "story"
+        try:
+            save_number = int(save_string[len("story"):])
+            return save_number
+        except ValueError:
+            # Handle the case where the number cannot be converted to an integer
+            return None
+    else:
+        # Handle the case where the save string is not in the expected format
+        return None
 
 def save_game(character_name: str, character_info: dict, current_story_index: int) -> None:
     character_info["saved_at"] = f"story{current_story_index}"

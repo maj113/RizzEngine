@@ -1,7 +1,7 @@
 from Utilities.interface import slow_print, display_stats, clrscr
 from Utilities.loader import  load_json
 from Player.Playerstats import update_player_stats
-
+from Player.moneymanager import character_has_money
 
 def activity_go_to_gym() -> None:
     """Go to the gym"""
@@ -18,7 +18,7 @@ def activity_go_to_gym() -> None:
             workout_time = int(input())
             clrscr()
 
-            if workout_time <= player_stats["money"]:
+            if character_has_money(workout_time):
                 break
 
             return slow_print("Brotha you broke asf, lazy ass mf go work", sleepfor=2)

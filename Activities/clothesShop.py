@@ -1,8 +1,9 @@
 from typing import Dict
 
-from Utilities.interface import slow_print, clrscr
-from Utilities.loader import load_json
 from Player.Playerstats import update_player_stats
+from Utilities.interface import clrscr, slow_print
+from Utilities.loader import load_json
+
 
 def load_clothes_json() -> Dict[str, int]:
     loaded_clothes_shop = load_json("./Activities/clothesShop.json")

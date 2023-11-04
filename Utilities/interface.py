@@ -1,12 +1,14 @@
 import os
 import sys
-from time import sleep
 from random import uniform
-from typing import Any
+from time import sleep
+from typing import Any, NoReturn
 
 from Player.Playerstats import display_player_stats, view_or_modify_player_name
-from .storymanager import compare_stats, check_saves, save_game
-from .loader import load_json,  load_activities_module, process_directory
+
+from .loader import load_activities_module, load_json, process_directory
+from .storymanager import (check_saves, compare_stats, get_saves_index,
+                           save_game)
 
 
 def get_first_docs_or_exec(module_name: str, execute: bool = False) -> Any | None:
@@ -34,9 +36,15 @@ def get_first_docs_or_exec(module_name: str, execute: bool = False) -> Any | Non
 
 def clrscr() -> None:
     """
-    Clears the console screen using the appropriate command based on the OS.
+    Clears the console screen using an escape sequence. 
     """
+    # Doesn't work in nutika
     print("\033c", end="", flush=True)
+
+def slow_input(prompt) -> str:
+    slow_print(prompt, newlineend=False)
+    choice = input().strip()
+    return choice
 
 def slow_print(
         text: str, speed: int = 5,
@@ -56,7 +64,7 @@ def slow_print(
         clrscr()
 
 #TODO: MOVE TO Storymanager.py
-def start_story(character_name: str) -> None:
+def start_story(character_name: str, start_index: int = 0) -> None:
     character_story_data = load_json(f"./Stories/{character_name}.json")
 
     if character_name not in character_story_data:
@@ -76,24 +84,23 @@ def start_story(character_name: str) -> None:
         )
         return
 
-    intro_text = character_info["intro"]
-    clrscr()
-    slow_print(intro_text)
-
-    slow_print(f"Do you want to pick {character_name}? (yes/no): ", newlineend=False)
-    choice = input().strip().lower()
-
-    if choice != "yes":
-        # Ask if they want to pick a different character
+    if start_index <= 0:
+        intro_text = character_info["intro"]
         clrscr()
-        slow_print("Do you want to pick a different character? (yes/no): ", newlineend=False)
-        choice = input().strip().lower()
+        slow_print(intro_text)
 
-        if choice == "yes":
-            return  # Return to character selection
+        choice =slow_input(f"Do you want to pick {character_name}? (yes/no): ").lower()
+
+        if choice != "yes":
+            # Ask if they want to pick a different character
+            clrscr()
+            choice = slow_input("Do you want to pick a different character? (yes/no): ").lower()
+            if choice == "yes":
+                return  # Return to character selection
+
     clrscr()
     character_story = character_info.get("storizz", {})
-    current_story_index = 0
+    current_story_index = start_index
 
     while f"story{current_story_index}" in character_story:
         story_segment = character_story[f"story{current_story_index}"]["story"]
@@ -109,9 +116,8 @@ def start_story(character_name: str) -> None:
                 slow_print(line)
 
         if askout_count > 0:  # Check if there are askouts
-            slow_print("\nWhich response are you picking? ", newlineend=False)
+            choice = slow_input("\nWhich response are you picking? ")
 
-            choice = input().strip()
             clrscr()
             if choice == "menu":
                 break  # Return to the main menu
@@ -127,7 +133,7 @@ def start_story(character_name: str) -> None:
                 slow_print("Invalid choice. Please enter a valid option.")
 
         # Save the game progress
-        save_game(character_name ,character_info, current_story_index)
+        save_game(character_name, character_info, current_story_index)
 
         current_story_index += 1
 
@@ -151,10 +157,10 @@ def check_activities() -> None:
             if description:
                 slow_print(f"   {description} [{idx}]")
                 idx += 1  # Increment idx only when description is truthy
-        slow_print("\nSelect an activity (enter the number): ", newlineend=False)
+        
 
         try:
-            choice = int(input())
+            choice = int(slow_input("\nSelect an activity (enter the number): "))
             if 1 <= choice <= len(activity_files):
                 selected_module_name = activity_files[choice - 1][:-3]  # Remove '.py' extension
                 get_first_docs_or_exec(selected_module_name, True)
@@ -164,7 +170,7 @@ def check_activities() -> None:
             slow_print("Invalid input. Please enter a number.", sleepfor=2)
 
 
-def character_selector() -> None:
+def character_selector(continue_option: bool = False) -> None:
     while True:
         clrscr()
         characters_stats = process_directory()
@@ -195,33 +201,32 @@ def character_selector() -> None:
             )
             return
 
-        slow_print(
+        choice = slow_input(
             "\nSelect a character (enter the number) or 'menu' to go back: ",
-            newlineend=False
         )
-        choice = input().strip()
+
 
         if choice == "menu":
             break
+
         if choice.isdigit() and 1 <= int(choice) <= len(characters_stats):
             selected_character_index = int(choice) - 1
             selected_character_name = list(characters_stats.keys())[selected_character_index]
 
             if selected_character_name in available_characters:
-                # Check for save state
-                if check_saves(character_name):
+                if continue_option and check_saves(selected_character_name):
                     clrscr()
-                    slow_print(
-                        "You are about to overwrite the save state for"
-                        f" {selected_character_name.capitalize()}. Continue? (yes/no): ",
-                        newlineend=False
-                    )
-                    overwrite_choice = input().strip().lower()
+                    continue_choice = slow_input(
+                        "Do you want to continue the story for"
+                        f" {selected_character_name.capitalize()}? (yes/no): ",
+                    ).lower()
 
-                    if overwrite_choice == "yes":
-                        start_story(selected_character_name)
-                else:
-                    start_story(selected_character_name)
+                    if continue_choice == "yes":
+                        start_story(selected_character_name, get_saves_index(selected_character_name))
+                    else:
+                        continue
+
+                start_story(selected_character_name)
             else:
                 clrscr()
                 slow_print(
@@ -241,7 +246,7 @@ class Mainmenu:
     def __init__(self) -> None:
         self.menu_options = {
             "Start new story": self.start_new_story,
-            "Continue Story": None,  # Placeholder for the continue action
+            "Continue Story": self.continue_story,  # Placeholder for the continue action
             "Do some activities": self.activity_picker,
             "Check stats and characters": display_stats,
             "Change player's name": self.name_change,
@@ -253,17 +258,20 @@ class Mainmenu:
     def start_new_story(self) -> None:
         self.available_options("character_selection")
 
+    def continue_story(self) -> None:
+        character_selector(True)
+
     def activity_picker(self) -> None:
         self.available_options("activities")
 
-    def quit_game(self):
+    def quit_game(self) -> NoReturn:
         clrscr()
         slow_print("Cya next time :)")
         sys.exit(0)
 
-    def name_change(self):
+    def name_change(self) -> None:
         clrscr()
-        name = input("What's your name? ")
+        name = slow_input("What's your name? ")
 
         current_name = view_or_modify_player_name()
         if current_name is None:
@@ -277,15 +285,12 @@ class Mainmenu:
         else:
             # Ask for confirmation using slow_print
             clrscr()
-            slow_print(
+            confirmation = slow_input(
                 f"Are you sure you want to update your name to '{name}'? (yes/no): ",
-                newlineend=False
-            )
+            ).lower()
             
-            confirmation = input().strip().lower()
             clrscr()
             if confirmation == 'yes':
-                ()
                 view_or_modify_player_name(name)
                 slow_print(f"Your name is now: {name}", sleepfor=2)
             else:
@@ -308,8 +313,7 @@ class Mainmenu:
     def mainmenu(self) -> None:
         while True:
             self.available_options()
-            slow_print("\nWhat are you picking? ", newlineend=False)
-            choice = input()
+            choice = slow_input("\nWhat are you picking? ")
 
             if not choice.isdigit():
                 clrscr()

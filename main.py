@@ -1,5 +1,5 @@
-from Utilities.interface import Mainmenu, slow_print, clrscr
 from Player.Playerstats import view_or_modify_player_name
+from Utilities.interface import Mainmenu, clrscr, slow_print
 
 menu = Mainmenu()
 clrscr()

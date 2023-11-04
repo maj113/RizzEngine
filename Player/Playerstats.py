@@ -1,9 +1,9 @@
-import random
 import os
+import random
 from typing import Dict
 
 from Utilities.loader import load_json, save_json
-
+test: Dict[str, Dict[str, int] | Dict[str, str] | Dict[str, Dict[str, str]]]
 JSON_FILE_PATH = "player_stats.json"
 
 def generate_player_stats() -> Dict[str, int | str]:
@@ -20,7 +20,7 @@ if not os.path.exists(JSON_FILE_PATH):
     saved_player_stats = generate_player_stats()
     save_json(JSON_FILE_PATH, saved_player_stats)
 
-def display_player_stats() -> str | None:
+def display_player_stats() -> str:
     loaded_player_stats = load_json(JSON_FILE_PATH)
     stats_str = ""
 
@@ -33,7 +33,7 @@ def display_player_stats() -> str | None:
 
     return "No player stats found."
 
-def view_or_modify_player_name(name: str | None = None):
+def view_or_modify_player_name(name: str | None = None) -> str | None:
     stats = load_json(JSON_FILE_PATH)
     if not name and "name" not in stats:
         return None
